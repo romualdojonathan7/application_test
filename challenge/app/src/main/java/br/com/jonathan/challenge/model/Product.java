@@ -2,14 +2,12 @@ package br.com.jonathan.challenge.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-import br.com.jonathan.challenge.model.converter.TimestampConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -47,4 +45,13 @@ public class Product {
 
     @SerializedName(value = "description")
     private String description;
+
+    @Ignore
+    public Product(String brand, String name, String image, String productType, String description) {
+        this.brand = brand;
+        this.name = name;
+        this.image = image;
+        this.productType = productType;
+        this.description = description;
+    }
 }

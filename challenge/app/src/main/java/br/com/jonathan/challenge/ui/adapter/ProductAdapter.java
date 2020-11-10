@@ -1,6 +1,7 @@
 package br.com.jonathan.challenge.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -11,30 +12,30 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import br.com.jonathan.challenge.R;
 import br.com.jonathan.challenge.model.Product;
+import br.com.jonathan.challenge.databinding.ProductItemBinding;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>{
 
-    private LayoutInflater layoutInflater;
-    private Context context;
     private List<Product> products;
-
-    public ProductAdapter(Context context){
-        this.context = context;
-        layoutInflater = LayoutInflater.from(context);
-    }
 
     @NonNull
     @Override
     public ProductAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.product_item_2, parent, false); // AQUI. Trocar o activity_main por job_item
+        ProductItemBinding productItemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.product_item, parent, false);
 
-        return new ProductViewHolder(view);
+        return new ProductViewHolder(productItemBinding);
     }
 
     @Override
@@ -42,21 +43,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         if(products != null) {
             Product product = products.get(position);
 
-            Glide.with(this.context)
-                    .load(product.getImage())
-                    .dontAnimate()
-                    .centerCrop()
-                    .error(android.R.drawable.ic_menu_gallery)
-                    .into(holder.companyImage);
-
-            holder.productTitle.setText(product.getName());
-            holder.productDescription.setText(product.getDescription());
-            holder.productCreatedAt.setText(product.getCreatedAt().toString());
-            holder.productType.setText(product.getProductType());
-//            holder.jobDescription.setText(job.getDescrption());
+            holder.productItemBinding.setProduct(product);
+            holder.productItemBinding.executePendingBindings();
         } else {
             // Exibe lista vazia
         }
+    }
+
+    @BindingAdapter({"imageUrl"})
+    public static void setImage(ImageView imageView, String imageUrl){
+        Glide.with(imageView.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_menu_gallery)
+                .dontAnimate()
+                .centerCrop()
+                .error(android.R.drawable.ic_menu_gallery)
+                .into(imageView);
+    }
+
+    @BindingAdapter({"dateText"})
+    public static void setText(TextView textView, Timestamp timestamp){
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
+        textView.setText(dateFormat.format(timestamp));
     }
 
     public void setProducts(List<Product> products) {
@@ -72,24 +80,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return 0;
     }
 
-    public class ProductViewHolder extends RecyclerView.ViewHolder {
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView companyImage;
-        private final TextView productTitle, productDescription, productCreatedAt, productType;
+        final ProductItemBinding productItemBinding;
 
+        public ProductViewHolder(@NonNull ProductItemBinding productItemBinding) {
+            super(productItemBinding.getRoot());
 
-        public ProductViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            companyImage = itemView.findViewById(R.id.imageView_product_image);
-            productTitle = itemView.findViewById(R.id.text_view_product_title);
-            productDescription = itemView.findViewById(R.id.text_view_product_description);
-            productCreatedAt = itemView.findViewById(R.id.text_view_created_at);
-            productType = itemView.findViewById(R.id.text_view_product_type);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                productDescription.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
-            }
+            this.productItemBinding = productItemBinding;
         }
     }
 }

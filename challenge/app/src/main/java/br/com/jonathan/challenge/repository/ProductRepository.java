@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import br.com.jonathan.challenge.database.AppDatabase;
 import br.com.jonathan.challenge.database.AppExecutor;
-import br.com.jonathan.challenge.database.dao.ProductDao;
 import br.com.jonathan.challenge.model.Product;
 import br.com.jonathan.challenge.retrofit.RetrofitInstance;
 import okhttp3.ResponseBody;
@@ -38,7 +36,7 @@ public class ProductRepository {
         return instance;
     }
 
-    public void loadJobs(){
+    private void loadJobs(){
         Call<ResponseBody> callLoadProducts = new RetrofitInstance().getProductService().getProducts();
 
         callLoadProducts.enqueue(new Callback<ResponseBody>() {
@@ -69,10 +67,10 @@ public class ProductRepository {
     }
 
     public LiveData<List<Product>> getProducts() {
-        return appDatabase.productDao().getAllJobs();
+        return appDatabase.productDao().getAllProducts();
     }
 
-    public void insert(final List<Product> products){
+    private void insert(final List<Product> products){
         AppExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {

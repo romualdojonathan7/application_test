@@ -4,14 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import br.com.jonathan.challenge.MainActivity;
 import br.com.jonathan.challenge.R;
 import br.com.jonathan.challenge.databinding.ActivityLoginBinding;
 import br.com.jonathan.challenge.model.User;
-import br.com.jonathan.challenge.ui.viewmodel.HomeViewModel;
 import br.com.jonathan.challenge.ui.viewmodel.LoginViewModel;
 import br.com.jonathan.challenge.ui.viewmodel.factory.LoginFactory;
-import br.com.jonathan.challenge.ui.viewmodel.factory.SignupFactory;
 
 import android.content.Context;
 import android.content.Intent;
@@ -66,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("challengeApplication", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("user.email", user.getEmail());
+                editor.putString("user.name", user.getFullName());
+                editor.apply();
             }
         });
     }

@@ -1,18 +1,12 @@
 package br.com.jonathan.challenge.model;
 
-import android.text.TextUtils;
-import android.util.Patterns;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-import br.com.jonathan.challenge.model.converter.TimestampConverter;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -46,6 +40,7 @@ public class User {
     @ColumnInfo(name = "dt_updated_at")
     private Timestamp updatedAt;
 
+    @Ignore
     public User(String fullName, String email, String password){
         this.fullName = fullName;
         this.email = email;

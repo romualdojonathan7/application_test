@@ -87,9 +87,6 @@ public class SignupViewModel extends ViewModel {
         }
 
         return true;
-//        return emailValidator.isValid(email, TextUtils.isEmpty(this.email)) &&
-//                nameValidator.isValid(name, TextUtils.isEmpty(this.name))&&
-//                passwordValidator.isValid(password, TextUtils.isEmpty(this.password));
     }
 
     public void setErrorListener(ViewListener errorViewListener) {
