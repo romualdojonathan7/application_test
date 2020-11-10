@@ -18,6 +18,7 @@ import br.com.jonathan.challenge.model.Product;
 import br.com.jonathan.challenge.util.LiveDataTestUtil;
 import br.com.jonathan.challenge.util.TestData;
 
+import static br.com.jonathan.challenge.util.TestData.PRODUCTS;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -48,11 +49,11 @@ public class ProductDaoTest {
 
     @Test
     public void getProductsAfterInsert() throws InterruptedException {
-        productDao.insertAllWithDate(TestData.PRODUCTS);
+        productDao.insertAllWithDate(PRODUCTS);
 
         List<Product> products = LiveDataTestUtil.getValue(productDao.getAllProducts());
 
-        assertEquals(products.size(), TestData.PRODUCTS.size());
+        assertEquals(products.size(), PRODUCTS.size());
     }
 
     @After
