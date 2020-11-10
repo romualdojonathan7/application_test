@@ -17,4 +17,12 @@ public class EmailValidator extends METValidator {
     public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
         return !isEmpty && Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches();
     }
+
+    public static String isValid(@NonNull String email) {
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            return "Provided e-mail is not a valid e-mail. Please input a valid e-mail.";
+        }
+
+        return null;
+    }
 }

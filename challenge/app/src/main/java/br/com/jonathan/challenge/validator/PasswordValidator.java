@@ -40,4 +40,24 @@ public class PasswordValidator extends METValidator {
         // At least one lower case character, one upper case character, one digit, special characters and 8 to 16
         return password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$");
     }
+
+    public static String isValid(@NonNull String password, String confirmationPassword) {
+
+        if(!(password.length() >= 8 && password.length() <= 16)) {
+            return "Password must be between 8 and 16 characters.";
+        }
+
+        if(confirmationPassword != null){
+            if(!password.equals(confirmationPassword)){
+                return "Passwords aren't equal";
+            }
+        }
+
+        // At least one lower case character, one upper case character, one digit, special characters and 8 to 16
+        if (!password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$")) {
+            return "Password must contain at least one lower character, one upper character, one digit and one special character.";
+        }
+
+        return null;
+    }
 }

@@ -22,10 +22,6 @@ public class SignupViewModel extends ViewModel {
     private NameValidator nameValidator;
     private PasswordValidator passwordValidator;
 
-    private View.OnFocusChangeListener onFocusEmail;
-    private View.OnFocusChangeListener onFocusName;
-    private View.OnFocusChangeListener onFocusPassword;
-
     private ViewListener errorViewListener;
 
     public String name, email, password, confirmationPassword;
@@ -66,26 +62,24 @@ public class SignupViewModel extends ViewModel {
             return false;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            errorViewListener.onError("Email Error", "Provided e-mail is not a valid e-mail. Please input a valid e-mail.");
+        String resultEmailValidation = EmailValidator.isValid(email);
+        String resultPasswordValidation = PasswordValidator.isValid(password, confirmationPassword);
+        String resultNameValidation = NameValidator.isValid(name);
+
+        if(resultNameValidation != null) {
+            errorViewListener.onError("Password Error", resultNameValidation);
             return false;
         }
 
-        if(name.length() < 3){
-            errorViewListener.onError("Name Error", "Provided name is too short.");
+        if(resultEmailValidation != null){
+            errorViewListener.onError("Email Error", resultEmailValidation);
             return false;
         }
 
-        if(!(password.length() >= 8 && password.length() <= 16)) {
-            errorViewListener.onError("Password Error", "Password must be between 8 and 16 characters.");
+        if(resultPasswordValidation != null){
+            errorViewListener.onError("Password Error", resultPasswordValidation);
             return false;
         }
-
-        if(!password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$")) {
-            errorViewListener.onError("Password Error", "Password must contain at least one lower character, one upper character, one digit and one special character.");
-            return false;
-        }
-
         return true;
     }
 
@@ -106,9 +100,6 @@ public class SignupViewModel extends ViewModel {
             } finally {
                 isLoading.setValue(false);
             }
-        } else {
-            isLoading.setValue(false);
-            errorViewListener.onError("Credenciais invalidas", "Verifique os dados inseridos");
         }
     }
 

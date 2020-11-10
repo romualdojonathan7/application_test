@@ -15,6 +15,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import br.com.jonathan.challenge.database.AppDatabase;
 import br.com.jonathan.challenge.database.dao.ProductDao;
 import br.com.jonathan.challenge.model.Product;
+import br.com.jonathan.challenge.util.LiveDataTestUtil;
+import br.com.jonathan.challenge.util.TestData;
 
 import static org.junit.Assert.*;
 

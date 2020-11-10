@@ -1,4 +1,4 @@
-package br.com.jonathan.challenge;
+package br.com.jonathan.challenge.util;
 
 import java.util.Arrays;
 import java.util.List;

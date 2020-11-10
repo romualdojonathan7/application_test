@@ -8,6 +8,7 @@ import br.com.jonathan.challenge.R;
 import br.com.jonathan.challenge.databinding.ActivityLoginBinding;
 import br.com.jonathan.challenge.model.User;
 import br.com.jonathan.challenge.ui.viewmodel.LoginViewModel;
+import br.com.jonathan.challenge.ui.viewmodel.SignupViewModel;
 import br.com.jonathan.challenge.ui.viewmodel.factory.LoginFactory;
 
 import android.content.Context;
@@ -18,7 +19,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+public class LoginActivity extends AppCompatActivity implements LoginViewModel.ViewListener{
 
     private ActivityLoginBinding binding;
 
@@ -28,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginFactory factory = new LoginFactory(this.getApplication());
         LoginViewModel loginViewModel = new ViewModelProvider(this, factory).get(LoginViewModel.class);
+        loginViewModel.setErrorListener(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         binding.setLifecycleOwner(this);
@@ -42,17 +46,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        setAutoValidate(loginViewModel);
         subscribeToModel(loginViewModel);
+    }
+
+    private void setAutoValidate(LoginViewModel loginViewModel) {
+        MaterialEditText emailEditText = binding.editTextNameOrEmail;
+        MaterialEditText passwordEditText = binding.editTextPassword;
+
+        emailEditText.setAutoValidate(true);
+        passwordEditText.setAutoValidate(true);
+
+        emailEditText.addValidator(loginViewModel.getEmailValidator());
+        passwordEditText.addValidator(loginViewModel.getPasswordValidator());
     }
 
     private void subscribeToModel(LoginViewModel loginViewModel){
         loginViewModel.loginResponse.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                } else {
-                    Toast.makeText(LoginActivity.this, "Credenciais invalidas", Toast.LENGTH_LONG).show();
+                if (!aBoolean){
+                    Toast.makeText(LoginActivity.this, "Wrong email or password", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -62,10 +76,22 @@ public class LoginActivity extends AppCompatActivity {
             public void onChanged(User user) {
                 SharedPreferences sharedPreferences = getSharedPreferences("challengeApplication", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+
                 editor.putString("user.email", user.getEmail());
                 editor.putString("user.name", user.getFullName());
+
                 editor.apply();
             }
         });
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    }
+
+    @Override
+    public void onError(String header, String message) {
+        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

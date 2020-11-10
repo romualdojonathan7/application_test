@@ -14,4 +14,11 @@ public class NameValidator extends METValidator {
     public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
         return !isEmpty;
     }
+
+    public static String isValid(@NonNull String name) {
+        if(name.length() < 3){
+            return "Provided name is too short";
+        }
+        return null;
+    }
 }
